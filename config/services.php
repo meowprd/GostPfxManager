@@ -50,6 +50,12 @@ $container->delegate(new ReflectionContainer(true));
 /* --------------------------- Get database config -------------------------- */
 $databaseConfig = require(CONFIG_PATH . '/database.php');
 
+/* ---------------------------- String translate ---------------------------- */
+function __(string $key){
+    $translations = require_once(CONFIG_PATH . "/translate.php");
+    return $translations[$key] ?? $key;
+}
+
 /* ------------------------------ Init services ----------------------------- */
 // Init Router
 $container->add(RouterInterface::class, Router::class);

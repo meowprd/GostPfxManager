@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+require_once(dirname(__FILE__) . '/config/app.php');
+require_once(APP_PATH . '/vendor/autoload.php');
+
+use PurrPHP\Console\Kernel;
+use PurrPHP\Console\ConsoleColors;
+
+/** @var \League\Container\Container $container */
+$container = require(CONFIG_PATH . '/services.php');
+
+$status = $container->get(Kernel::class)->handle();
+echo(ConsoleColors::PURPLE . "Exiting with status: $status" . ConsoleColors::RESET . PHP_EOL); 
+exit($status);

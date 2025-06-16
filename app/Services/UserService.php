@@ -52,10 +52,10 @@ class UserService {
             $user->setId($data['id']);
             $user->setLogin($data['login']);
             $user->setPassword($data['password']);
-            $user->setCreatedAt(new \DateTime($data['createdAt']));
-            $user->setUpdatedAt(new \DateTime($data['updatedAt']));
-            $user->setIsBlocked($data['isBlocked'] === '1');
-            $user->setApiKey($data['apiKey']);
+            $user->setCreatedAt(new \DateTime($data['created_at']));
+            $user->setUpdatedAt(new \DateTime($data['updated_at']));
+            $user->setIsBlocked($data['is_blocked'] === 1);
+            $user->setApiKey($data['api_key']);
             return $user;
         } catch (Exception) {
             return false;

@@ -109,7 +109,7 @@ class User extends AbstractEntity {
      */
     public function isBlocked(): bool
     {
-        return $this->is_blocked === 1;
+        return $this->is_blocked;
     }
 
     /**

@@ -21,7 +21,7 @@ readonly class RegistrationUtilities extends AbstractUtilities {
             'success' => true,
             'message' => __('Registration successful'),
             'api_key' => $api_key
-        ));
+        ), 201);
     }
 
     public static function loginAlreadyExistsResponse(): Response {

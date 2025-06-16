@@ -9,4 +9,6 @@ return array(
 
     // api
     Route::post('/api/auth.register', array(\PurrPHP\App\Controllers\Api\AuthController::class, 'register')),
+    Route::post('/api/auth.login', array(\PurrPHP\App\Controllers\Api\AuthController::class, 'login')),
+
 );

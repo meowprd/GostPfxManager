@@ -8,6 +8,7 @@ use PurrPHP\App\Entities\User;
 use PurrPHP\App\Services\UserService;
 
 use PurrPHP\App\Utilities\Auth\RegistrationUtilities;
+use PurrPHP\App\Utilities\Auth\LoginUtilities;
 
 class AuthController extends AbstractController {
 
@@ -39,5 +40,20 @@ class AuthController extends AbstractController {
         if(!$user) { return RegistrationUtilities::serverErrorResponse(); }
 
         return RegistrationUtilities::successfulResponse($api_key);
+    }
+
+    public function login() {
+        $validation = $this->validator->make(array(
+            'login' => $this->request->input('login'),
+            'password' => $this->request->input('password'),
+        ), LoginUtilities::rules());
+        $validation->validate();
+
+        if($validation->fails()) { return LoginUtilities::validationErrorResponse($validation); }
+        $user = $this->userService->authorize($this->request->input('login'), $this->request->input('password'));
+        if(!$user) { return LoginUtilities::incorrectDataResponse(); }
+        if($user->isBlocked()) { return LoginUtilities::accountBlockedResponse(); }
+
+        return LoginUtilities::successfulResponse($user->getApiKey());
     }
 }

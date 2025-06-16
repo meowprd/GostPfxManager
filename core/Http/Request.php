@@ -17,9 +17,12 @@ class Request {
     private readonly array $server
   ) {}
 
-  public static function createFromGlobals(): static {
-    return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
-  }
+    public static function createFromGlobals(): static {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if(is_array($data)) { $_POST = array_merge($_POST, $data); }
+        $_POST['raw_php_input'] = file_get_contents('php://input');
+        return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
+    }
 
   public function method(): string {
     return $this->server['REQUEST_METHOD'];

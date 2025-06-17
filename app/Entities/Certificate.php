@@ -14,6 +14,8 @@ class Certificate extends AbstractEntity {
     private string $mail;
     private \DateTime $validFrom;
     private \DateTime $validTo;
+    private string $createdBy;
+    private string $storedOn;
 
     public function __construct() {}
 
@@ -101,6 +103,26 @@ class Certificate extends AbstractEntity {
         $validTo = $this->validTo->setTimezone(new \DateTimeZone('UTC'));
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
         return $now > $validTo;
+    }
+
+    public function getCreatedBy(): string
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(string $createdBy): void
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    public function getStoredOn(): string
+    {
+        return $this->storedOn;
+    }
+
+    public function setStoredOn(string $storedOn): void
+    {
+        $this->storedOn = $storedOn;
     }
 
 }

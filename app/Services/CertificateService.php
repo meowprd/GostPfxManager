@@ -2,6 +2,7 @@
 
 namespace PurrPHP\App\Services;
 
+use DateTime;
 use Doctrine\DBAL\Exception;
 use PurrPHP\Entity\EntityService;
 
@@ -24,6 +25,8 @@ class CertificateService {
                     'mail' => ':mail',
                     'valid_from' => ':valid_from',
                     'valid_to' => ':valid_to',
+                    'created_by' => ':created_by',
+                    'stored_on' => ':stored_on',
                 ))
                 ->setParameters(array(
                     'subject' => $cert->getSubject(),
@@ -33,11 +36,30 @@ class CertificateService {
                     'mail' => $cert->getMail(),
                     'valid_from' => $cert->getValidFrom()->format('Y-m-d H:i:s'),
                     'valid_to' => $cert->getValidTo()->format('Y-m-d H:i:s'),
+                    'created_by' => $cert->getCreatedBy(),
+                    'stored_on' => $cert->getStoredOn(),
                 ))
                 ->executeQuery();
             $cert->setId($this->entityService->save($cert));
             return $cert;
-        } catch (Exception) {
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function get(?int $id = null): array|false {
+        $queryBuilder = $this->entityService->connection()->createQueryBuilder();
+        try {
+            $queryBuilder
+                ->select('*')
+                ->from('certificates');
+            if($id) { $queryBuilder->where('id = :id')->setParameter('id', $id); }
+            $queryBuilder
+                ->orderBy('id', 'DESC')
+                ->executeQuery();
+
+            return $queryBuilder->fetchAllAssociative();
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -50,6 +72,20 @@ class CertificateService {
         if(!$cert) { return false; }
 
         return $cert;
+    }
+
+    public function exportPublicKeyPart(string $pfxPath, string $password): false|array {
+        $exportTo = APP_PATH . '/tmp/' . uniqid() . '.pem';
+        $cmd = sprintf(
+          'openssl pkcs12 -in %s -clcerts -nokeys -out %s -nodes -password pass:%s',
+            escapeshellarg($pfxPath),
+            escapeshellarg($exportTo),
+            escapeshellarg($password)
+        );
+
+        exec($cmd, $output, $returnCode);
+        if($returnCode !== 0) { return false; }
+        return [true, $exportTo];
     }
 
     private function getSystemOutput($pfxPath, $password): false|array {

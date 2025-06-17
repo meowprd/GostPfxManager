@@ -18,3 +18,5 @@ define("ROUTES_PATH", CONFIG_PATH . '/routes.php');
 
 // CLI commands namespace
 define("COMMANDS_NAMESPACE", 'PurrPHP\\Console\\Commands\\'); // system commands
+
+require_once('private.php');

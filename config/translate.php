@@ -22,4 +22,8 @@ return array(
     'Error parsing uploaded file' => 'Ошибка обработки загруженного файла',
     'Certificate expired' => 'Сертификат просрочен',
     'File already exists' => 'Файл уже существует',
+
+    // DownloadService
+    'File does not exist' => 'Файл не существует',
+    'This is directory' => 'Невозможно загрузить директорию',
 );

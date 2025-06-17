@@ -2,6 +2,7 @@
 
 namespace PurrPHP\Middleware;
 
+use Doctrine\DBAL\Connection;
 use League\Container\Container;
 use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
@@ -19,7 +20,8 @@ class RequestHandler implements RequestHandlerInterface {
   );
 
   public function __construct(
-    private Container $container
+    private Container $container,
+    private Connection $database,
   ) {}
 
   public function handle(Request $request): Response {
@@ -27,7 +29,7 @@ class RequestHandler implements RequestHandlerInterface {
 
     $middlewareClass = array_shift($this->middleware);
     $middleware = $this->container->get($middlewareClass);
-    $response = $middleware->process($request, $this);
+    $response = $middleware->process($request, $this->database, $this);
     return $response;
   }
 

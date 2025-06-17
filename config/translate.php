@@ -4,6 +4,8 @@ return array(
     // AbstractUtilities
     'Validation errors occurred' => 'Произошли ошибки валидации',
     'An unexpected error occurred. Please try again later' => 'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже',
+    'Missing API key' => 'Отсутствует API ключ',
+    'Invalid API key' => 'Неверный API ключ',
 
     // RegistrationUtilities
     'Registration successful' => 'Регистрация прошла успешно',
@@ -14,4 +16,10 @@ return array(
     'Authorization successful' => 'Успешная авторизация',
     'Incorrect login or password' => 'Неверный логин или пароль',
     'Your account is temporarily blocked' => 'Аккаунт временно заблокирован',
+
+    // UploadUtilities
+    'Upload successful' => 'Успешно загружено',
+    'Error parsing uploaded file' => 'Ошибка обработки загруженного файла',
+    'Certificate expired' => 'Сертификат просрочен',
+    'File already exists' => 'Файл уже существует',
 );

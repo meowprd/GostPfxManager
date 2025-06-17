@@ -36,6 +36,10 @@ class Request {
     return $this->get[$key] ?? $this->post[$key] ?? $default;
   }
 
+  public function files(): array {
+      return $this->files;
+  }
+
   public function session() { return $this->session; }
 
   public function setSession($session) { $this->session = $session; return $this; }

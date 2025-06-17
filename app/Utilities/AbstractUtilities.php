@@ -15,7 +15,8 @@ readonly class AbstractUtilities {
         ), 422);
     }
 
-    public static function serverErrorResponse(): Response {
+    public static function serverErrorResponse(): Response
+    {
         return JsonResponse::create(array(
             'success' => false,
             'message' => __('An unexpected error occurred. Please try again later'),

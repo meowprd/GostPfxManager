@@ -2,6 +2,7 @@
 
 namespace PurrPHP\Middleware\Handlers;
 
+use Doctrine\DBAL\Connection;
 use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
 use PurrPHP\Session\SessionInterface;
@@ -14,7 +15,7 @@ class StartSession implements MiddlewareInterface {
     private SessionInterface $session
   ) {}
 
-  public function process(Request $request, RequestHandlerInterface $handler): Response {
+  public function process(Request $request, Connection $database, RequestHandlerInterface $handler): Response {
     $this->session->start();
     $request->setSession($this->session);
     return $handler->handle($request);

@@ -2,6 +2,7 @@
 
 namespace PurrPHP\Middleware;
 
+use Doctrine\DBAL\Connection;
 use PurrPHP\Http\Request;
 use PurrPHP\Middleware\RequestHandlerInterface;
 use PurrPHP\Http\Response;
@@ -24,7 +25,7 @@ class RouteMiddlewares implements MiddlewareInterface {
     private string $routesPath,
   ) {}
 
-  public function process(Request $request, RequestHandlerInterface $requestHandler): Response {
+  public function process(Request $request, Connection $database, RequestHandlerInterface $requestHandler): Response {
     $dispatcher = $this->registerRoutes();
     $routeInfo = $dispatcher->dispatch($request->method(), $request->uri());
     

@@ -2,6 +2,7 @@
 
 namespace PurrPHP\Middleware\Handlers;
 
+use Doctrine\DBAL\Connection;
 use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
 use PurrPHP\Routing\RouterInterface;
@@ -16,7 +17,7 @@ class RouterDispatch implements MiddlewareInterface {
     private Container $container
   ) {}
 
-  public function process(Request $request, RequestHandlerInterface $handler): Response {
+  public function process(Request $request, Connection $database, RequestHandlerInterface $handler): Response {
     [$handler, $vars] = $this->router->dispatch($request, $this->container);
     return call_user_func_array($handler, $vars);
   }

@@ -15,7 +15,6 @@ readonly class LoginUtilities extends AbstractUtilities {
             'password' => 'required|min:5',
         );
     }
-
     public static function successfulResponse($api_key): Response {
         return JsonResponse::create(array(
             'success' => true,
@@ -38,6 +37,24 @@ readonly class LoginUtilities extends AbstractUtilities {
             'success' => false,
             'message' => __('Your account is temporarily blocked'),
             'error_code' => 'ACCOUNT_BLOCKED'
+        ), 403);
+    }
+
+    // for middleware AuthenticateWithToken
+    public static function missingApiKey(): Response {
+        return JsonResponse::create(array(
+            'success' => false,
+            'message' => __('Missing API key'),
+            'error_code' => 'MISSING_API_KEY',
+        ), 401);
+    }
+
+    // for middleware AuthenticateWithToken
+    public static function invalidApiKey(): Response {
+        return JsonResponse::create(array(
+            'success' => false,
+            'message' => __('Invalid API key'),
+            'error_code' => 'INVALID_API_KEY',
         ), 403);
     }
 }

@@ -63,7 +63,8 @@ $container->extend(RouterInterface::class);
 
 // Init Middlewares
 $container->add(RequestHandlerInterface::class, RequestHandler::class)
-  ->addArgument($container);
+  ->addArgument($container)
+  ->addArgument(Connection::class);
 
 $container->add(RouterDispatch::class)
   ->addArgument(RouterInterface::class)
@@ -98,7 +99,7 @@ $container->addShared(Validator::class)
   ->addArgument(new ArrayArgument(array())); // custom messages 
 
 
-// Init abstact controller
+// Init abstract controller
 $container->inflector(AbstractController::class)
   ->invokeMethod('setContainer', array($container))
   ->invokeMethod('setValidator', array($container->get(Validator::class)));

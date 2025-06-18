@@ -1,0 +1,102 @@
+{% extends "components/template.html.twig" %}
+
+{% import "macros/Badge.html.twig" as Badge %}
+{% import "macros/Table.html.twig" as Table %}
+{% import 'macros/Button.html.twig' as Button %}
+
+{% block content %}
+
+    <div class="bg-default-background h-screen flex mobile:flex-col justify-around">
+
+        {% include "components/dashboard_sidebar.html.twig" %}
+
+        <div id="content" class="flex h-full w-full flex-col justify-between">
+            <div class="flex w-full grow shrink-0 basis-0 flex-col items-start gap-8 bg-default-background px-12 py-12 overflow-auto mobile:flex-col mobile:flex-nowrap mobile:gap-6 mobile:px-4 mobile:py-6">
+                <div class="w-full flex items-center justify-center">
+                    <div class="flex w-full max-w-[1280px] flex-col gap-8 mobile:flex-col mobile:flex-nowrap mobile:gap-6 justify-between">
+                        <div class="flex w-full items-start justify-between mobile:flex-col mobile:flex-nowrap mobile:justify-between">
+                            <div class="flex flex-col items-start gap-1">
+                                <span class="text-heading-1 font-heading-1 text-default-font mobile:text-heading-2 mobile:font-heading-2">
+                                    Просмотр сертификата ID: {{ certificate.id }}
+                                </span>
+                                {% set difference = date(certificate.valid_to).diff(date('now', 'UTC')) %}
+                                {% set daysUntil = difference.days %}
+                                {% set badge %}
+                                    {% if date(certificate.valid_to) > date('now', 'UTC') %}
+                                        {{ Badge.badge('success', 'Активен') }}
+                                    {% else %}
+                                        {{ Badge.badge('error', 'Истек') }}
+                                    {% endif %}
+                                {% endset %}
+                                <div class="text-body font-body text-default-font flex flex-row gap-2">Статус: {{ badge }} ({{ daysUntil }} дн.)</div>
+                                <span class="text-body font-body text-default-font">ФИО: {{ certificate.subject }}</span>
+                                <span class="text-body font-body text-default-font">Должность: {{ certificate.position }}</span>
+                                <span class="text-body font-body text-default-font">Снилс: {{ certificate.snils }}</span>
+                                <span class="text-body font-body text-default-font">ИНН: {{ certificate.inn }}</span>
+                                <span class="text-body font-body text-default-font">E-Mail: {{ certificate.mail }}</span>
+                                <span class="text-body font-body text-default-font">Действует с: {{ certificate.valid_from }} (UTC)</span>
+                                <span class="text-body font-body text-default-font">Действует по: {{ certificate.valid_to }} (UTC)</span>
+                                <span class="text-body font-body text-default-font">Загрузил: {{ certificate.created_by }}</span>
+                                <span class="text-body font-body text-default-font">Расположена в: {{ certificate.stored_on }}</span>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                {{ Button.button({
+                                    'variant': 'brand-primary',
+                                    'class': 'transition-all',
+                                    'children': 'Загрузить .pfx',
+                                    'onClick': 'alert("download pfx")'
+                                }) }}
+                                {{ Button.button({
+                                    'variant': 'brand-primary',
+                                    'class': 'transition-all',
+                                    'children': 'Загрузить .pem',
+                                    'onClick': 'alert("download pem")'
+                                }) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <span class="text-heading-1 font-heading-1 text-default-font mobile:text-heading-2 mobile:font-heading-2">
+                            История сертификатов пользователя
+                        </span>
+                        {% if likeSubject|length == 0 %}
+                            <div class="flex w-full flex-col gap-4 items-center justify-center">
+                                <span class="text-body font-body text-subtext-color">
+                                    Не найдено дополнительной истории сертификатов
+                                </span>
+                            </div>
+                        {% else %}
+                            {% macro data_rows(likeSubject) %}
+                                {% for numb, certificate in likeSubject %}
+                                    {% set difference = date(certificate.valid_to).diff(date('now', 'UTC')) %}
+                                    {% set daysUntil = difference.days %}
+                                    {% set badge %}
+                                        {% if date(certificate.valid_to) > date('now', 'UTC') %}
+                                            {{ Badge.badge('success', 'Активен') }}
+                                        {% else %}
+                                            {{ Badge.badge('error', 'Истек') }}
+                                        {% endif %}
+                                    {% endset %}
+                                    {{ Table.row(
+                                        Table.cell('<a href="/dashboard/certificate/'~certificate.id~'" class="text-body-bold font-body-bold text-default-font">'~certificate.subject~' [UID '~certificate.id~']</a>') ~
+                                        Table.cell('<p class="text-body font-body text-neutral-500">'~certificate.valid_to~'</p>') ~
+                                        Table.cell(badge ~ '<p class="text-body font-body text-neutral-500">'~daysUntil~' дн.</p>')
+                                    ) }}
+                                {% endfor %}
+                            {% endmacro %}
+                            {{ Table.table(
+                                Table.header_row(
+                                    Table.header_cell('Сертификат') ~
+                                    Table.header_cell('Истекает') ~
+                                    Table.header_cell('Статус')
+                                ),
+                                _self.data_rows(likeSubject)
+                            ) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

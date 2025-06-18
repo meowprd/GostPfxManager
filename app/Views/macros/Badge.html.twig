@@ -1,0 +1,43 @@
+
+{% macro badge(variant, children, class) %}
+    {# Значения по умолчанию #}
+    {% set variant = variant|default('brand') %}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера badge #}
+    {% set baseClasses = 'group/97bdb082 flex h-6 items-center gap-1 rounded-md border border-solid border-brand-100 bg-brand-100 px-2' %}
+
+    {# Модификаторы варианта #}
+    {% set variantClasses = '' %}
+    {% if variant == 'success' %}
+        {% set variantClasses = 'border border-solid border-success-100 bg-success-100' %}
+    {% elseif variant == 'warning' %}
+        {% set variantClasses = 'border border-solid border-warning-100 bg-warning-100' %}
+    {% elseif variant == 'error' %}
+        {% set variantClasses = 'border border-solid border-error-100 bg-error-100' %}
+    {% elseif variant == 'neutral' %}
+        {% set variantClasses = 'border border-solid border-neutral-100 bg-neutral-100' %}
+    {% endif %}
+
+    {# Классы текста #}
+    {% set textClasses = 'whitespace-nowrap text-caption font-caption text-brand-800' %}
+    {% if variant == 'success' %}
+        {% set textClasses = textClasses ~ ' text-success-800' %}
+    {% elseif variant == 'warning' %}
+        {% set textClasses = textClasses ~ ' text-warning-800' %}
+    {% elseif variant == 'error' %}
+        {% set textClasses = textClasses ~ ' text-error-800' %}
+    {% elseif variant == 'neutral' %}
+        {% set textClasses = textClasses ~ ' text-neutral-700' %}
+    {% endif %}
+
+    {# Собираем все классы контейнера badge #}
+    {% set badgeClasses = [baseClasses, variantClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML badge #}
+    <div class="{{ badgeClasses }}">
+        {% if children %}
+            <span class="{{ textClasses }}">{{ children|raw }}</span>
+        {% endif %}
+    </div>
+{% endmacro %}

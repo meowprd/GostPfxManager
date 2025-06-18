@@ -1,0 +1,85 @@
+{# {{ Button.button({
+    'variant': 'neutral-tertiary',
+    'size': 'small',
+    'class': 'transition-all',
+    'children': 'Создать аккаунт',
+    "onClick": "location.href='/register'"
+}) }} #}
+
+{# (variant, size, children, class, type, onClick) #}
+
+{% macro Button(options = {}) %}
+    {# Значения по умолчанию #}
+    {% set variant = options.variant|default('brand-primary') %}
+    {% set size = options.size|default('medium') %}
+    {% set children = options.children|default('') %}
+    {% set class = options.class|default('') %}
+    {% set type = options.type|default('button') %}
+    {% set onClick = options.onClick %}
+
+    {# Базовые классы кнопки #}
+    {% set baseClasses = 'group/3b777358 flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md border-none px-3 disabled:cursor-default disabled:bg-neutral-200 hover:disabled:cursor-default hover:disabled:bg-neutral-200 active:disabled:cursor-default active:disabled:bg-neutral-200' %}
+
+    {# Модификаторы размера #}
+    {% set sizeClasses = '' %}
+    {% if size == 'small' %}
+        {% set sizeClasses = 'h-6 w-auto flex-row flex-nowrap gap-1 px-2 py-0' %}
+    {% elseif size == 'large' %}
+        {% set sizeClasses = 'h-10 w-auto px-4 py-0' %}
+    {% endif %}
+
+    {# Модификаторы варианта #}
+    {% set variantClasses = '' %}
+    {% if variant == 'inverse' %}
+        {% set variantClasses = 'bg-transparent hover:bg-[#ffffff29] active:bg-[#ffffff3d]' %}
+    {% elseif variant == 'destructive-tertiary' %}
+        {% set variantClasses = 'bg-transparent hover:bg-error-50 active:bg-error-100' %}
+    {% elseif variant == 'destructive-secondary' %}
+        {% set variantClasses = 'bg-error-50 hover:bg-error-100 active:bg-error-50' %}
+    {% elseif variant == 'destructive-primary' %}
+        {% set variantClasses = 'bg-error-600 hover:bg-error-500 active:bg-error-600' %}
+    {% elseif variant == 'neutral-tertiary' %}
+        {% set variantClasses = 'bg-transparent hover:bg-neutral-100 active:bg-neutral-200' %}
+    {% elseif variant == 'neutral-secondary' %}
+        {% set variantClasses = 'border border-solid border-neutral-border bg-default-background hover:bg-neutral-50 active:bg-default-background' %}
+    {% elseif variant == 'neutral-primary' %}
+        {% set variantClasses = 'bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-100' %}
+    {% elseif variant == 'brand-tertiary' %}
+        {% set variantClasses = 'bg-transparent hover:bg-brand-50 active:bg-brand-100' %}
+    {% elseif variant == 'brand-secondary' %}
+        {% set variantClasses = 'bg-brand-50 hover:bg-brand-100 active:bg-brand-50' %}
+    {% elseif variant == 'brand-primary' %}
+        {% set variantClasses = 'bg-brand-600 hover:bg-brand-500 active:bg-brand-600' %}
+    {% endif %}
+
+    {# Классы текста #}
+    {% set textClasses = 'whitespace-nowrap text-body-bold font-body-bold text-black group-disabled/3b777358:text-neutral-400' %}
+    {% if size == 'small' %}
+        {% set textClasses = textClasses ~ ' text-caption-bold font-caption-bold' %}
+    {% elseif size == 'large' %}
+        {% set textClasses = textClasses ~ ' text-body-bold font-body-bold' %}
+    {% endif %}
+    {% if variant == 'inverse' %}
+        {% set textClasses = textClasses ~ ' text-black' %}
+    {% elseif variant in ['destructive-tertiary', 'destructive-secondary'] %}
+        {% set textClasses = textClasses ~ ' text-error-700' %}
+    {% elseif variant in ['neutral-tertiary', 'neutral-secondary', 'neutral-primary'] %}
+        {% set textClasses = textClasses ~ ' text-neutral-700' %}
+    {% elseif variant in ['brand-tertiary', 'brand-secondary'] %}
+        {% set textClasses = textClasses ~ ' text-brand-700' %}
+    {% endif %}
+
+    {# Собираем все классы кнопки #}
+    {% set buttonClasses = [baseClasses, sizeClasses, variantClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML кнопки #}
+    <button
+        class="{{ buttonClasses }}"
+        type="{{ type }}"
+        {% if onClick %}onClick="{{ onClick }}"{% endif %}
+    >
+        {% if children %}
+            <span class="{{ textClasses }}">{{ children|raw }}</span>
+        {% endif %}
+    </button>
+{% endmacro %}

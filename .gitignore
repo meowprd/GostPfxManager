@@ -4,3 +4,4 @@
 /config/database.php
 /storage/
 /config/private.php
+/tailwindcss

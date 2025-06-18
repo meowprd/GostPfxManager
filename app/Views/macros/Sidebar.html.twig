@@ -1,0 +1,140 @@
+{# {% set header %} {{ SvgLogo.Logo('h-8') }} {% endset %}
+
+<div class="bg-default-background h-screen">
+    {{ Sidebar.sidebar(
+        header,
+        Button.Button({
+            children: 'Logout',
+            class: 'dropdown-trigger'
+        }),
+        Sidebar.nav_section(
+            'id-section-1',
+            'label-Section 1',
+            Dropdown.DropDownMenu(
+                'section-1-menu',
+                Dropdown.DropDownItem('Item 1') ~ 
+                Dropdown.DropDownDivider() ~ 
+                Dropdown.DropDownItem('Item 2'),
+                'dropdown-menu z-500'
+            ),
+            Sidebar.nav_item(true, 'Item 1') ~
+            Sidebar.nav_item(false, 'Item 2')
+        ) ~ Sidebar.nav_section(
+            'id-section-1',
+            'label-Section 1',
+            Dropdown.DropDownMenu(
+                'section-1-menu',
+                Dropdown.DropDownItem('Item 3') ~ 
+                Dropdown.DropDownDivider() ~ 
+                Dropdown.DropDownItem('Item 4'),
+                'dropdown-menu z-500'
+            ),
+            Sidebar.nav_item(false, 'Item 3') ~
+            Sidebar.nav_item(false, 'Item 4')
+        ) ~ Sidebar.nav_item(false, '<a href="#">Some project</a>'),
+        'my-custom-class'
+    ) }}
+</div> #}
+
+{# Макрос для SidebarWithNestedSectionsAndSearch (корневого контейнера) #}
+{% macro sidebar(header, footer, children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера sidebar #}
+    {% set baseClasses = 'flex h-full w-60 flex-col items-start border-r border-solid border-neutral-border bg-default-background' %}
+
+    {# Собираем все классы контейнера sidebar #}
+    {% set sidebarClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML sidebar #}
+    <nav class="{{ sidebarClasses }}">
+        {% if header %}
+            <div class="flex w-full flex-col items-center gap-2 px-4 py-4">
+                {{ header|raw }}
+            </div>
+        {% endif %}
+        {% if children %}
+            <div class="flex w-full grow shrink-0 basis-0 flex-col items-start px-2 py-2 overflow-auto gap-2">
+                {{ children|raw }}
+            </div>
+        {% endif %}
+        {% if footer %}
+            <div class="flex w-full flex-col items-center px-4 py-4">
+                {{ footer|raw }}
+            </div>
+        {% endif %}
+    </nav>
+{% endmacro %}
+
+{# Макрос для NavItem (элемента навигации) #}
+{% macro nav_item(selected, children, rightSlot, class) %}
+    {# Значение по умолчанию #}
+    {% set selected = selected|default(false) %}
+    {% set class = class|default('') %}
+
+    {# Базовые классы элемента nav-item #}
+    {% set baseClasses = 'group/24343c20 flex h-8 w-full cursor-pointer items-center gap-2 rounded-md px-3 py-1 hover:bg-neutral-50 active:bg-neutral-100' %}
+    {% if selected %}
+        {% set baseClasses = baseClasses ~ ' bg-neutral-100 hover:bg-neutral-100 active:bg-neutral-200' %}
+    {% endif %}
+
+    {# Классы для текста внутри элемента #}
+    {% set textClasses = 'line-clamp-1 grow shrink-0 basis-0 text-caption-bold font-caption-bold text-subtext-color' %}
+    {% if selected %}
+        {% set textClasses = textClasses ~ ' text-caption-bold font-caption-bold text-default-font' %}
+    {% endif %}
+
+    {# Собираем все классы элемента nav-item #}
+    {% set itemClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML элемента nav-item #}
+    <div class="{{ itemClasses }}">
+        {% if children %}
+            <span class="{{ textClasses ~ class }}">{{ children|raw }}</span>
+        {% endif %}
+        {% if rightSlot %}
+            <div class="flex items-center">
+                {{ rightSlot|raw }}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# Макрос для NavSection (секции навигации с аккордеоном) #}
+{% macro nav_section(id, label, rightSlot, children, class, defaultOpen) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+    {% set defaultOpen = defaultOpen|default(true) %}
+
+    {# Базовые классы контейнера nav-section #}
+    {% set baseClasses = 'group/19b3e897 cursor-pointer' %}
+
+    {# Собираем все классы контейнера nav-section #}
+    {% set sectionClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML nav-section с использованием макроса accordion #}
+    {% import "macros/Accordion.html.twig" as Accordion %}
+    {{ Accordion.accordion(
+        id,
+        _self.nav_section_trigger(label, rightSlot),
+        '<div class="flex w-full flex-col items-start pl-6">' ~ children ~ '</div>',
+        sectionClasses
+    ) }}
+{% endmacro %}
+
+{# Вспомогательный макрос для триггера NavSection #}
+{% macro nav_section_trigger(label, rightSlot) %}
+    <div class="flex h-8 w-full flex-none items-center gap-2 rounded-md pl-3 pr-2 py-1 group-hover/19b3e897:bg-neutral-50">
+        {% if label %}
+            <span class="line-clamp-1 grow shrink-0 basis-0 text-caption-bold font-caption-bold text-default-font">
+                {{ label|raw }}
+            </span>
+        {% endif %}
+        {% if rightSlot %}
+            <div class="flex items-center">
+                {{ rightSlot|raw }}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}

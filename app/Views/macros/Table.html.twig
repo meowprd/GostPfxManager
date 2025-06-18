@@ -1,0 +1,95 @@
+{# macros/table.twig #}
+
+{# Макрос для Table (корневого контейнера таблицы) #}
+{% macro table(header, children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера table #}
+    {% set baseClasses = 'w-full' %}
+
+    {# Собираем все классы контейнера table #}
+    {% set tableClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML таблицы #}
+    <table class="{{ tableClasses }}">
+        <thead>{{ header|raw }}</thead>
+        <tbody class="border-b border-solid border-neutral-border">
+            {{ children|raw }}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{# Макрос для Row (строки таблицы) #}
+{% macro row(children, clickable, class) %}
+    {# Значения по умолчанию #}
+    {% set clickable = clickable|default(false) %}
+    {% set class = class|default('') %}
+
+    {# Базовые классы строки #}
+    {% set baseClasses = 'group/5d119f8d border-t border-solid border-neutral-border' %}
+    {% if clickable %}
+        {% set baseClasses = baseClasses ~ ' hover:bg-neutral-50' %}
+    {% endif %}
+
+    {# Собираем все классы строки #}
+    {% set rowClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML строки #}
+    <tr class="{{ rowClasses }}">
+        {{ children|raw }}
+    </tr>
+{% endmacro %}
+
+{# Макрос для Cell (ячейки таблицы) #}
+{% macro cell(children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы ячейки #}
+    {% set baseClasses = 'flex h-12 w-full items-center gap-1 px-3' %}
+
+    {# Собираем все классы ячейки #}
+    {% set cellClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML ячейки #}
+    <td>
+        <div class="{{ cellClasses }}">
+            {{ children|raw }}
+        </div>
+    </td>
+{% endmacro %}
+
+{# Макрос для HeaderRow (заголовочной строки) #}
+{% macro header_row(children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Генерируем HTML заголовочной строки #}
+    <tr class="{{ class }}">
+        {{ children|raw }}
+    </tr>
+{% endmacro %}
+
+{# Макрос для HeaderCell (заголовочной ячейки) #}
+{% macro header_cell(children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы заголовочной ячейки #}
+    {% set baseClasses = 'flex h-8 w-full items-center gap-1 px-3' %}
+
+    {# Собираем все классы заголовочной ячейки #}
+    {% set headerCellClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML заголовочной ячейки #}
+    <th>
+        <div class="{{ headerCellClasses }}">
+            {% if children %}
+                <span class="whitespace-nowrap text-caption-bold font-caption-bold text-subtext-color">
+                    {{ children|raw }}
+                </span>
+            {% endif %}
+        </div>
+    </th>
+{% endmacro %}

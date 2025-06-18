@@ -40,6 +40,10 @@ class Request {
       return $this->files;
   }
 
+  public function cookie(): array {
+      return $this->cookie;
+  }
+
   public function session() { return $this->session; }
 
   public function setSession($session) { $this->session = $session; return $this; }

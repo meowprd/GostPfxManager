@@ -1,0 +1,70 @@
+{% extends "components/template.html.twig" %}
+
+{% import "macros/Badge.html.twig" as Badge %}
+{% import "macros/Table.html.twig" as Table %}
+
+{% block content %}
+
+    <div class="bg-default-background h-screen flex mobile:flex-col justify-around">
+
+        {% include "components/dashboard_sidebar.html.twig" %}
+
+        <div id="content" class="flex h-full w-full flex-col justify-between">
+            <div class="flex w-full grow shrink-0 basis-0 flex-col items-start gap-8 bg-default-background px-12 py-12 overflow-auto mobile:flex-col mobile:flex-nowrap mobile:gap-6 mobile:px-4 mobile:py-6">
+                <div class="w-full flex items-center justify-center">
+                    <div class="flex w-full max-w-[1280px] flex-col gap-8 mobile:flex-col mobile:flex-nowrap mobile:gap-6 justify-between">
+                        <div class="flex w-full items-start justify-between mobile:flex-col mobile:flex-nowrap mobile:justify-between">
+                            <div class="flex flex-col items-start gap-1">
+                                <span class="text-heading-1 font-heading-1 text-default-font mobile:text-heading-2 mobile:font-heading-2">
+                                    Список загруженных сертификатов
+                                </span>
+                                <span class="text-body font-body text-subtext-color">
+                                    Вы авторизованы как: {{ user.login }}
+                                </span>
+                                <span class="text-body font-body text-subtext-color">
+                                    Серверное время (мск): {{ 'now'|date("d.m.Y H:i:s", 'Europe/Moscow') }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if certificates|length == 0 %}
+                            <div class="flex w-full flex-col gap-4 items-center justify-center">
+                                <span class="text-body font-body text-subtext-color">
+                                    Не найдено загруженных сертификатов
+                                </span>
+                            </div>
+                        {% else %}
+                            {% macro data_rows(certificates) %}
+                                {% for numb, certificate in certificates %}
+                                    {% set difference = date(certificate.valid_to).diff(date('now', 'UTC')) %}
+                                    {% set daysUntil = difference.days %}
+                                    {% set badge %}
+                                        {% if date(certificate.valid_to) > date('now', 'UTC') %}
+                                            {{ Badge.badge('success', 'Активен') }}
+                                        {% else %}
+                                            {{ Badge.badge('error', 'Истек') }}
+                                        {% endif %}
+                                    {% endset %}
+                                    {{ Table.row(
+                                        Table.cell('<a href="/dashboard/certificate/'~certificate.id~'" class="text-body-bold font-body-bold text-default-font">'~certificate.subject~' [UID '~certificate.id~']</a>') ~
+                                        Table.cell('<p class="text-body font-body text-neutral-500">'~certificate.valid_to~'</p>') ~
+                                        Table.cell(badge ~ '<p class="text-body font-body text-neutral-500">'~daysUntil~' дн.</p>')
+                                    ) }}
+                                {% endfor %}
+                            {% endmacro %}
+                            {{ Table.table(
+                                Table.header_row(
+                                    Table.header_cell('Сертификат') ~
+                                    Table.header_cell('Истекает') ~
+                                    Table.header_cell('Статус')
+                                ),
+                                _self.data_rows(certificates)
+                            ) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

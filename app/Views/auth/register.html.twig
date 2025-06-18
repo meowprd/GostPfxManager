@@ -1,0 +1,58 @@
+{% extends 'components/template.html.twig' %}
+{% import "macros/SvgLogo.html.twig" as SvgLogo %}
+{% import 'macros/Button.html.twig' as Button %}
+{% import "macros/TextField.html.twig" as TextField %}
+
+{% block content %}
+
+    <div class="flex w-full flex-col items-center justify-center bg-default-background h-screen">
+        <div class="flex w-full max-w-[384px] flex-col items-center justify-center gap-4">
+
+            <a href="/" class="flex flex-col items-center justify-center gap-6 px-6 py-2 hover:cursor-pointer hover:scale-125 transition-all">
+                {{ SvgLogo.logo('h-16') }}
+            </a>
+
+
+            <div class="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6">
+
+                {{ TextField.textField({
+                    'class': 'h-auto w-full flex-none',
+                    'variant': 'filled',
+                    'label': 'Логин',
+                    'placeholder': 'Введите логин',
+                    'name': 'login'
+                })
+                }}
+
+                {{ TextField.textField({
+                    'class': 'h-auto w-full flex-none',
+                    'variant': 'filled',
+                    'label': 'Пароль',
+                    'placeholder': 'Введите пароль',
+                    'name': 'password',
+                    'type': 'password'
+                })
+                }}
+
+                <p id="global-message" class="text-xs text-red-500 text-center w-full hidden"></p>
+
+                {{ Button.Button({
+                    'class': 'h-8 w-full flex-none transition-all',
+                    'children': 'Зарегистрироваться',
+                    'onClick': 'requestApi("POST", "auth.register", "login:password", "/login")'
+                }) }}
+
+                <div class="flex w-full flex-col items-center">
+                    {{ Button.Button({
+                        'variant': 'neutral-tertiary',
+                        'size': 'small',
+                        'class': 'transition-all',
+                        'children': 'Войти в существующий аккаунт',
+                        "onClick": "location.href='/login'"
+                    }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

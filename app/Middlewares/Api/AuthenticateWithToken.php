@@ -1,18 +1,16 @@
 <?php
 
-namespace PurrPHP\App\Middlewares;
+namespace PurrPHP\App\Middlewares\Api;
 
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use PurrPHP\Middleware\MiddlewareInterface;
-use PurrPHP\Middleware\RequestHandlerInterface;
+use PurrPHP\App\Entities\User;
+use PurrPHP\App\Utilities\Auth\LoginUtilities;
 use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
-use PurrPHP\Http\RedirectResponse;
-use Doctrine\DBAL\Connection;
-
-use PurrPHP\App\Utilities\Auth\LoginUtilities;
-use PurrPHP\App\Entities\User;
+use PurrPHP\Middleware\MiddlewareInterface;
+use PurrPHP\Middleware\RequestHandlerInterface;
 
 class AuthenticateWithToken implements MiddlewareInterface {
     public function process(Request $request, Connection $database, RequestHandlerInterface $handler): Response {
@@ -40,6 +38,7 @@ class AuthenticateWithToken implements MiddlewareInterface {
                 ->executeQuery();
 
             $data = $queryBuilder->fetchAssociative();
+            if(!$data) { return false; }
             $user = new User();
             $user->setId($data['id']);
             $user->setLogin($data['login']);

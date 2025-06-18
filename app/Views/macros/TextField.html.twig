@@ -1,0 +1,82 @@
+{# {{ TextField.textField({
+    'class': 'h-auto w-full flex-none',
+    'variant': 'filled',
+    'label': 'Логин',
+    'placeholder': 'Введите логин',
+    'name': 'login',
+    'type': 'text' 
+})
+}} #}
+
+{# (type, disabled, error, variant, label, helpText, placeholder, value, name, class, onChange) #}
+
+{% macro TextField(options = {}) %}
+    {# Значения по умолчанию #}
+    {% set type = options.type|default('text') %}
+    {% set disabled = options.disabled|default(false) %}
+    {% set error = options.error|default(false) %}
+    {% set variant = options.variant|default('outline') %}
+    {% set label = options.label|default(null) %}
+    {% set helpText = options.helpText|default(null) %}
+    {% set placeholder = options.placeholder|default(null) %}
+    {% set value = options.value|default(null) %}
+    {% set name = options.name|default(null) %}
+    {% set id = options.name|default(null) %}
+    {% set class = options.class|default('') %}
+    {% set onChange = options.onChange|default(null) %}
+
+    {# Базовые классы контейнера textfield #}
+    {% set baseClasses = 'group/be48ca43 flex flex-col items-start gap-1' %}
+
+    {# Собираем все классы контейнера textfield #}
+    {% set labelClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Классы для обертки input #}
+    {% set inputWrapperClasses = 'flex h-8 w-full flex-none items-center gap-1 rounded-md border border-solid border-neutral-border bg-default-background px-2 group-focus-within/be48ca43:border group-focus-within/be48ca43:border-solid group-focus-within/be48ca43:border-brand-primary' %}
+    {% if variant == 'filled' %}
+        {% set inputWrapperClasses = inputWrapperClasses ~ ' border border-solid border-neutral-100 bg-neutral-100 group-hover/be48ca43:border group-hover/be48ca43:border-solid group-hover/be48ca43:border-neutral-border group-focus-within/be48ca43:bg-default-background' %}
+    {% endif %}
+    {% if error %}
+        {% set inputWrapperClasses = inputWrapperClasses ~ ' border border-solid border-error-600' %}
+    {% elseif disabled %}
+        {% set inputWrapperClasses = inputWrapperClasses ~ ' border border-solid border-neutral-200 bg-neutral-200' %}
+    {% endif %}
+
+    {# Классы для input #}
+    {% set inputClasses = 'h-full w-full border-none bg-transparent text-body font-body text-default-font outline-none placeholder:text-neutral-400' %}
+
+    {# Классы для label #}
+    {% set labelTextClasses = 'text-caption-bold font-caption-bold text-default-font' %}
+
+    {# Классы для helpText #}
+    {% set helpTextClasses = 'text-caption font-caption text-subtext-color' %}
+    {% if error %}
+        {% set helpTextClasses = helpTextClasses ~ ' text-error-700' %}
+    {% endif %}
+
+    {# Генерируем HTML textfield #}
+    <label class="{{ labelClasses }}">
+        {% if label %}
+            <span class="{{ labelTextClasses }}">{{ label|raw }}</span>
+        {% endif %}
+        <div class="{{ inputWrapperClasses }}">
+            <div class="flex grow shrink-0 basis-0 flex-col items-start self-stretch px-1">
+                <input
+                    class="{{ inputClasses }}"
+                    type="{{ type }}"
+                    {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                    {% if value is defined %}value="{{ value }}"{% endif %}
+                    {% if name %}name="{{ name }}"{% endif %}
+                    {% if id %}id="{{ id }}"{% endif %}
+                    {% if onChange %}data-onchange="{{ onChange }}"{% endif %}
+                    {% if disabled %}disabled{% endif %}
+                    type="text"
+                >
+            </div>
+        </div>
+        <span 
+            class="{{ helpTextClasses }}"
+            {% if id %}id="{{ id }}-helpText"{% endif %}
+        >{{ helpText|raw }}</span>
+    </label>
+{% endmacro %}

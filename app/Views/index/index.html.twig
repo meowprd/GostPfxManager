@@ -1,0 +1,26 @@
+{% extends 'components/template.html.twig' %}
+{% import "macros/SvgLogo.html.twig" as SvgLogo %}
+{% import 'macros/Button.html.twig' as Button %}
+
+{% block content %}
+
+    <div class="container max-w-none flex w-full flex-col items-center justify-center gap-4 bg-default-background h-screen">
+        {{ SvgLogo.Logo('h-16') }}
+        <div class="flex w-full max-w-[576px] flex-col items-center gap-2">
+        <span class="text-heading-1 font-heading-1 text-default-font text-center">
+            meowprd projects
+        </span>
+            <span class="text-heading-3 font-heading-3 text-neutral-400 text-center">
+            Менеджер управления ГОСТ сертификатами
+        </span>
+        </div>
+        <div class="flex w-full items-center justify-center gap-2">
+            {{ Button.Button({
+                variant: "brand-secondary",
+                children: "Авторизация",
+                onClick: "location.href='/login'"
+            })}}
+        </div>
+    </div>
+
+{% endblock %}

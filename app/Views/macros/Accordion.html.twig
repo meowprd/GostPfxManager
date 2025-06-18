@@ -1,0 +1,47 @@
+{# macros/accordion.twig #}
+
+{# Макрос для Accordion (корневого контейнера) #}
+{% macro accordion(id, trigger, children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера accordion #}
+    {% set baseClasses = 'group/d2e81e20 flex w-full flex-col items-start rounded-md' %}
+
+    {# Собираем все классы контейнера accordion #}
+    {% set accordionClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML accordion #}
+    <div class="{{ accordionClasses }}" data-accordion="{{ id }}">
+        {# Trigger #}
+        {{ _self.accordion_trigger(trigger) }}
+        {# Content #}
+        {{ _self.accordion_content(children) }}
+    </div>
+{% endmacro %}
+
+{# Макрос для Trigger (триггера аккордеона) #}
+{% macro accordion_trigger(children) %}
+    {% if children %}
+        <div class="flex w-full cursor-pointer flex-col items-start gap-2" data-accordion-trigger>
+            <div class="flex w-full grow shrink-0 basis-0 flex-col items-start group-data-[state=open]/d2e81e20:h-auto group-data-[state=open]/d2e81e20:w-full group-data-[state=open]/d2e81e20:flex-none">
+                <div class="flex w-full items-center justify-between">
+                    <span class="accordion-chevron text-body font-body text-default-font" data-accordion-chevron>+</span>
+                    {{ children|raw }}
+                    {# Индикатор состояния (замена Chevron) #}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{# Макрос для Content (содержимого аккордеона) #}
+{% macro accordion_content(children) %}
+    {% if children %}
+        <div class="flex w-full flex-col items-start gap-2 hidden" data-accordion-content>
+            <div class="flex w-full grow shrink-0 basis-0 flex-col items-start">
+                {{ children|raw }}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

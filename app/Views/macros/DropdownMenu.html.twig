@@ -1,0 +1,72 @@
+{# {{ Button.button({
+    'class': 'dropdown-trigger',
+    'children': 'Open menu',
+}) }}
+
+{{
+    Dropdown.DropDownMenu(
+        'test-dropdown',
+        Dropdown.DropDownItem('<a href="/test">Go to test</a>') ~
+        Dropdown.DropDownDivider() ~
+        Dropdown.DropDownItem('Option 2'),
+        'dropdown-menu hidden z-1000'
+    )
+}} #}
+
+{# Макрос для DropdownMenu (корневого контейнера) #}
+{% macro DropDownMenu(id, children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера dropdown #}
+    {% set baseClasses = 'flex min-w-[192px] flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background px-1 py-1 shadow-lg hidden' %}
+
+    {# Собираем все классы контейнера dropdown #}
+    {% set dropdownClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML dropdown menu #}
+    {% if children %}
+        <div class="{{ dropdownClasses }}" data-dropdown="{{ id }}">
+            {{ children|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{# Макрос для DropdownItem (элемента меню) #}
+{% macro DropDownItem(children, class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы элемента dropdown #}
+    {% set baseClasses = 'group/adcae8d6 flex h-8 w-full cursor-pointer items-center gap-2 rounded-md px-3 hover:bg-neutral-100 active:bg-neutral-50 data-[highlighted]:bg-neutral-100' %}
+
+    {# Классы для текста внутри элемента #}
+    {% set textClasses = 'line-clamp-1 grow shrink-0 basis-0 text-body font-body text-default-font group-hover/adcae8d6:text-default-font' %}
+
+    {# Собираем все классы элемента dropdown #}
+    {% set itemClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML элемента dropdown #}
+    <div class="{{ itemClasses }}" data-dropdown-item>
+        {% if children %}
+            <span class="{{ textClasses }}">{{ children|raw }}</span>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# Макрос для DropdownDivider (разделителя) #}
+{% macro DropDownDivider(class) %}
+    {# Значение по умолчанию #}
+    {% set class = class|default('') %}
+
+    {# Базовые классы контейнера разделителя #}
+    {% set baseClasses = 'flex w-full items-start gap-2 px-1 py-1' %}
+
+    {# Собираем все классы контейнера разделителя #}
+    {% set dividerClasses = [baseClasses, class]|join(' ')|trim %}
+
+    {# Генерируем HTML разделителя #}
+    <div class="{{ dividerClasses }}">
+        <div class="flex h-px grow shrink-0 basis-0 flex-col items-center gap-2 bg-neutral-200"></div>
+    </div>
+{% endmacro %}

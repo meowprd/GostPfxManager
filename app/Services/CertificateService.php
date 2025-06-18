@@ -64,6 +64,23 @@ class CertificateService {
         }
     }
 
+    public function searchBySubject(string $subject): array|false {
+        $queryBuilder = $this->entityService->connection()->createQueryBuilder();
+        try {
+            $queryBuilder
+                ->select('*')
+                ->from('certificates')
+                ->where('subject LIKE :subject')
+                ->setParameter('subject', '%'.$subject.'%')
+                ->orderBy('id', 'DESC')
+                ->executeQuery();
+
+            return $queryBuilder->fetchAllAssociative();
+        } catch (Exception) {
+            return false;
+        }
+    }
+
     public function getCertificateInfo(string $pfxPath, string $password): false|Certificate {
         $output = $this->getSystemOutput($pfxPath, $password);
         if(!$output) { return false; }

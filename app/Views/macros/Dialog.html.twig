@@ -1,0 +1,22 @@
+{% macro DialogRoot(children, className = '', otherProps = {}) %}
+    {% if children %}
+        <div class="{{ 'flex flex-col items-center justify-center gap-2 bg-[#00000020]' ~ (className ? ' ' ~ className : '') }}"
+             {% for key, value in otherProps %}
+                 {{ key }}="{{ value }}"
+             {% endfor %}
+             >
+            {{ children|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro Content(children, className = '', otherProps = {}) %}
+    {% if children %}
+        <div class="{{ 'min-w-[320px] flex-col gap-2 rounded-md border border-solid border-neutral-border bg-default-background shadow-lg ' ~ (className ? ' ' ~ className : '') }}"
+             {% for key, value in otherProps %}
+                 {{ key }}="{{ value }}"
+             {% endfor %}>
+            {{ children|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}

@@ -10,6 +10,7 @@ return array(
     Route::get('/register', array(\PurrPHP\App\Controllers\Web\AuthController::class, 'register'), array(\PurrPHP\App\Middlewares\Web\GuestAccess::class)),
     Route::get('/dashboard', array(\PurrPHP\App\Controllers\Web\UserController::class, 'dashboard'), array(\PurrPHP\App\Middlewares\Web\UserAccess::class)),
     Route::get('/dashboard/certificate/{id}', array(\PurrPHP\App\Controllers\Web\UserController::class, 'certificate'), array(\PurrPHP\App\Middlewares\Web\UserAccess::class)),
+    Route::get('/dashboard/upload', array(\PurrPHP\App\Controllers\Web\UserController::class, 'upload'), array(\PurrPHP\App\Middlewares\Web\UserAccess::class)),
 
     // api
     Route::post('/api/auth.register', array(\PurrPHP\App\Controllers\Api\AuthController::class, 'register')),

@@ -27,6 +27,9 @@ class TwigFactory {
     
     /* ------------------------------ Functions ----------------------------- */
     $twig->addFunction(new TwigFunction('session', array($this, 'getSession')));
+    $twig->addFunction(new TwigFunction('basename', function ($path){
+        return basename($path);
+    }));
 
     return $twig;
   }

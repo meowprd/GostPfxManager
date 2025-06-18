@@ -38,19 +38,20 @@
                                 <span class="text-body font-body text-default-font">Действует по: {{ certificate.valid_to }} (UTC)</span>
                                 <span class="text-body font-body text-default-font">Загрузил: {{ certificate.created_by }}</span>
                                 <span class="text-body font-body text-default-font">Расположена в: {{ certificate.stored_on }}</span>
+                                <span class="text-body font-body text-default-font">Базовое название: {{ basename(certificate.stored_on) }}</span>
                             </div>
                             <div class="flex flex-col gap-2">
                                 {{ Button.button({
                                     'variant': 'brand-primary',
                                     'class': 'transition-all',
                                     'children': 'Загрузить .pfx',
-                                    'onClick': 'alert("download pfx")'
+                                    'onClick': 'window.open("/api/cert.download?file='~basename(certificate.stored_on)~'")'
                                 }) }}
                                 {{ Button.button({
                                     'variant': 'brand-primary',
                                     'class': 'transition-all',
                                     'children': 'Загрузить .pem',
-                                    'onClick': 'alert("download pem")'
+                                    'onClick': 'window.open("/api/cert.downloadPublicPart?file='~basename(certificate.stored_on)~'")'
                                 }) }}
                             </div>
                         </div>
@@ -77,7 +78,7 @@
                                         {% endif %}
                                     {% endset %}
                                     {{ Table.row(
-                                        Table.cell('<a href="/dashboard/certificate/'~certificate.id~'" class="text-body-bold font-body-bold text-default-font">'~certificate.subject~' [UID '~certificate.id~']</a>') ~
+                                        Table.cell('<a href="/dashboard/certificate/'~certificate.id~'" class="text-body-bold font-body-bold text-default-font">'~certificate.subject~' [UID '~certificate.id~'] <p class="text-xs">'~certificate.position~'</p></a>') ~
                                         Table.cell('<p class="text-body font-body text-neutral-500">'~certificate.valid_to~'</p>') ~
                                         Table.cell(badge ~ '<p class="text-body font-body text-neutral-500">'~daysUntil~' дн.</p>')
                                     ) }}

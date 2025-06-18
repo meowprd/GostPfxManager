@@ -32,4 +32,11 @@ class UserController extends AbstractController {
             'likeSubject' => $likeSubject
         ));
     }
+
+    public function upload() {
+        return $this->render('user/upload.html.twig', array(
+            'title' => 'Загрузка сертификата',
+            'user' => $this->request->session()->get('web_user'),
+        ));
+    }
 }
